@@ -1,0 +1,22 @@
+# API keys and private environment variables (DO NOT UPLOAD)
+.env
+
+# Python virtual environment
+.venv/
+env/
+venv/
+ENV/
+
+# Python cache files
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+.pytest_cache/
+
+# Local search history and logs
+.search_history.json
+*.log
+
+# Personal search exports
+exports/

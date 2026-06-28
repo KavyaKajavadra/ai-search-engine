@@ -1,0 +1,7 @@
+google-generativeai
+ddgs
+rich
+httpx
+beautifulsoup4
+html2text
+python-dotenv
