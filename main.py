@@ -15,7 +15,7 @@ from rich.prompt import Prompt, IntPrompt, Confirm
 import config
 from search_client import SearchClient
 from scraper import WebScraper
-from llm_client import GeminiClient
+from llm_client import OpenAIClient
 import utils
 
 # Initialize rich console for beautiful outputs
@@ -30,8 +30,8 @@ def print_welcome_banner():
     clear_terminal()
     banner_text = Text()
     banner_text.append("🔎 AI CUSTOM SEARCH ENGINE 🔎\n", style="bold cyan")
-    banner_text.append("A Premium RAG Tool Built with Gemini & Live Web Scraping\n", style="dim white")
-    banner_text.append(f"Model: {config.DEFAULT_MODEL}  |  Search: {'Google CSE' if config.has_google_search_keys() else 'DuckDuckGo (Free)'}", style="italic green")
+    banner_text.append("A Premium RAG Tool Built with OpenAI & Live Web Scraping\n", style="dim white")
+    banner_text.append(f"Model: {config.DEFAULT_MODEL}  |  Search: DuckDuckGo (Free)", style="italic green")
     
     console.print(
         Panel(
@@ -41,16 +41,16 @@ def print_welcome_banner():
             subtitle="[dim]Costs: 0 Rupees[/dim]"
         )
     )
-    # Check if Gemini key is available; warn user if not.
+    # Check if OpenAI key is available; warn user if not.
     config.print_setup_warning()
 
 def run_ai_search(search_client: SearchClient, scraper: WebScraper):
     """Executes a new AI search workflow."""
     print_welcome_banner()
     
-    # Check if we have the Gemini key
-    if not config.has_gemini_key():
-        console.print("[bold red]Error:[/] You must set your `GEMINI_API_KEY` in the `.env` file to use the AI capabilities.")
+    # Check if we have the OpenAI key
+    if not config.has_openai_key():
+        console.print("[bold red]Error:[/] You must set your `OPENAI_API_KEY` in the `.env` file to use the AI capabilities.")
         input("\nPress Enter to return to the main menu...")
         return
 
@@ -105,9 +105,9 @@ def run_ai_search(search_client: SearchClient, scraper: WebScraper):
                 deep_contents = None
 
     # Step 3: LLM Synthesis
-    llm = GeminiClient()
+    llm = OpenAIClient()
     answer = ""
-    with console.status("[bold green]Synthesizing answer with Gemini LLM...[/]") as status:
+    with console.status("[bold green]Synthesizing answer with OpenAI LLM...[/]") as status:
         answer, _ = llm.synthesize_answer(query, search_results, deep_contents)
 
     # Render results
@@ -155,7 +155,7 @@ def run_ai_search(search_client: SearchClient, scraper: WebScraper):
         elif choice == "4":
             break
 
-def run_chat_session(llm: GeminiClient, query: str, search_results: List[dict], deep_contents: List[str]):
+def run_chat_session(llm: OpenAIClient, query: str, search_results: list[dict], deep_contents: list[str]):
     """Handles an interactive chat session about the retrieved search results."""
     clear_terminal()
     console.print(
@@ -265,7 +265,7 @@ def view_history():
                 input("\nPress Enter to continue...")
 
 def edit_settings():
-    """Allows updating settings like the Gemini model choice and checking key status."""
+    """Allows updating settings like the LLM model choice and checking key status."""
     while True:
         print_welcome_banner()
         
@@ -275,11 +275,9 @@ def edit_settings():
         status_table.add_column("Current Status / Value", style="green")
         
         # API Keys validation
-        gemini_status = "[bold green]Configured ✅[/]" if config.has_gemini_key() else "[bold red]Missing ❌ (AI synthesis disabled)[/]"
-        google_status = "[bold green]Configured ✅[/]" if config.has_google_search_keys() else "[dim white]Not set (Using DuckDuckGo free mode) ℹ️[/]"
+        openai_status = "[bold green]Configured ✅[/]" if config.has_openai_key() else "[bold red]Missing ❌ (AI synthesis disabled)[/]"
         
-        status_table.add_row("GEMINI_API_KEY", gemini_status)
-        status_table.add_row("GOOGLE Search API", google_status)
+        status_table.add_row("OPENAI_API_KEY", openai_status)
         status_table.add_row("Default LLM Model", config.DEFAULT_MODEL)
         status_table.add_row("Max Search Count", str(config.DEFAULT_SEARCH_LIMIT))
         status_table.add_row("Content Scrape Limit", f"{config.MAX_CHARS_PER_PAGE} chars")
