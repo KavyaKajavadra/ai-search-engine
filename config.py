@@ -11,12 +11,11 @@ GOOGLE_API_KEY = os.getenv("GOOGLE_API_KEY")
 GOOGLE_CSE_ID = os.getenv("GOOGLE_CSE_ID")
 
 # Model configurations
-# Defaulting to gemini-2.0-flash as it is the standard active model in 2026
+# Defaulting to gemini-2.0-flash (standard active model)
 DEFAULT_MODEL = "gemini-2.0-flash"
 SUPPORTED_MODELS = [
     "gemini-2.0-flash",
-    "gemini-1.5-flash",
-    "gemini-1.5-pro"
+    "gemini-2.0-flash-lite"
 ]
 
 # Search configurations
